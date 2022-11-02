@@ -7,6 +7,5 @@ services:
     environment:
       POSTGRES_USER: muly
       POSTGRES_PASSWORD: mulythegoat
-      POSTGRES_DB: muly
     ports:
       - 5432:5432

@@ -9,9 +9,10 @@ import (
 )
 
 type config struct {
-	port int
-	env  string
-	db   struct {
+	port    int
+	env     string
+	timeout time.Duration
+	db      struct {
 		dsn          string
 		maxOpenCons  int
 		maxIdleConns int
@@ -22,6 +23,12 @@ type config struct {
 func importConfig(cfg *config) error {
 	var err error
 	cfg.port = viper.GetInt("server.address")
+	cfg.timeout, err = time.ParseDuration(viper.GetString("timeout"))
+	if err != nil {
+		log.Fatal("TIME_OUT wrong format")
+		return err
+	}
+
 	host := viper.GetString("database.host")
 	user := viper.GetString("database.user")
 	pass := viper.GetString("database.pass")

@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	authHandler "plato-tech/muly/auth/delivery/http"
+	"plato-tech/muly/auth/repository/authPostgres"
+	authUsecase "plato-tech/muly/auth/usecase"
 
-	_userRepo "plato-tech/muly/auth/repository/postgres/user_repo"
+	"github.com/gin-gonic/gin"
 )
 
 func (app *application) routes() *gin.Engine {
@@ -12,7 +14,9 @@ func (app *application) routes() *gin.Engine {
 	router := gin.Default()
 	router.GET("/v1/healthcheck", app.healthCheckHandler)
 
-	userRepo := _userRepo.New
+	userRepo := authPostgres.NewUserRepo(app.conn)
+	userUseCase := authUsecase.NewUserUsecase(userRepo, app.config.timeout)
+	authHandler.NewUserHandler(router, userUseCase)
 
 	return router
 }

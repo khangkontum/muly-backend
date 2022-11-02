@@ -1,4 +1,4 @@
-package usecase
+package authUsecase
 
 import (
 	"context"
@@ -28,7 +28,8 @@ func (uu *userUsecase) Insert(c *gin.Context, user *domain.User) {
 
 	receivedUser, err := uu.userRepo.Insert(ctx, user)
 	if err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 	c.JSON(http.StatusOK, receivedUser)
 }

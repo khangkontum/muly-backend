@@ -1,4 +1,4 @@
-package http
+package authHandler
 
 import (
 	"net/http"

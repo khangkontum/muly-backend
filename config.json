@@ -1,6 +1,6 @@
 {
   "environment": "development",
-  "khonloi": "bucu",
+  "timeout": "3s",
   "server": {
     "address": 4000
   },
@@ -9,7 +9,7 @@
     "port": "5432",
     "user": "muly",
     "pass": "mulythegoat",
-    "name": "muly",
+    "name": "postgres",
     "address": "localhost",
     "sslmode": "disable",
     "max_open_conns": 25,
