@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 )
@@ -50,6 +52,19 @@ func main() {
 
 	// Log a msg to say that the conn has been successfully established.
 	logger.Printf("database connection pool established")
+
+	// Create session AWS
+	sess, err := session.NewSessionWithOptions(session.Options{
+		Profile: "default",
+		Config: aws.Config{
+			Region: aws.String(cfg.aws.region),
+		},
+	})
+
+	if err != nil {
+		fmt.Printf("Failed to initialize new aws session: %v", err)
+		return
+	}
 
 	// Declare an instance of the application struct, containing the config
 	// struct and the logger.

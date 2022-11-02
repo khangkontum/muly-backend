@@ -17,6 +17,12 @@ type config struct {
 		maxIdleConns int
 		maxIdleTime  time.Duration
 	}
+	aws struct {
+		region string
+		publicBucketName string
+		accessKey string
+		secretAccressKey string
+	}
 }
 
 func importConfig(cfg *config) error {
