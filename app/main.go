@@ -62,11 +62,12 @@ func main() {
 	// requests to the healthCheckHandler method.
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      app.routes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+		Addr:           fmt.Sprintf(":%d", cfg.port),
+		Handler:        app.routes(),
+		IdleTimeout:    time.Minute,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   30 * time.Second,
+		MaxHeaderBytes: 1 << 20,
 	}
 
 	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)

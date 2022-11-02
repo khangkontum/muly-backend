@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func (app *application) routes() *mux.Router {
+func (app *application) routes() *gin.Engine {
 	// router := httprouter.New()
-	router := mux.NewRouter()
+	// router := mux.NewRouter()
+	router := gin.New()
+	router.GET("/v1/healthcheck", app.healthCheckHandler)
 
 	// router.NotFound = http.HandlerFunc(app.notFoundResponse)
 	// router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
-	router.HandleFunc("/v1/healthcheck", app.healthCheckHandler).Methods("GET")
 
 	return router
 }

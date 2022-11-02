@@ -1,51 +1,19 @@
-package auth
+package validate
 
-import (
-	"errors"
-	"plato-tech/muly/domain/users"
-	"plato-tech/muly/utils/validate"
+import "plato-tech/muly/domain"
 
-	"golang.org/x/crypto/bcrypt"
-)
-
-func Set(p *users.Password, plaintextPassword string) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(plaintextPassword), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	p.Plaintext = &plaintextPassword
-	p.Hash = hash
-
-	return nil
-}
-
-func Matches(p *users.Password, plaintextPassword string) (bool, error) {
-	err := bcrypt.CompareHashAndPassword(p.Hash, []byte(plaintextPassword))
-
-	if err != nil {
-		switch {
-		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
-			return false, nil
-		default:
-			return false, err
-		}
-	}
-	return true, nil
-}
-
-func ValidateEmail(v *validate.Validator, email string) {
+func ValidateEmail(v *Validator, email string) {
 	v.Check(email != "", "email", "must be provided")
-	v.Check(validate.Matches(email, validate.EmailRX), "email", "must be a valid email address")
+	v.Check(Matches(email, EmailRX), "email", "must be a valid email address")
 }
 
-func ValidatePasswordPlaintext(v *validate.Validator, password string) {
+func ValidatePasswordPlaintext(v *Validator, password string) {
 	v.Check(password != "", "password", "must be provided")
 	v.Check(len(password) >= 8, "password", "must be at least 8 bytes long")
 	v.Check(len(password) <= 72, "password", "must not be more than 72 bytes long")
 }
 
-func ValidateUser(v *validate.Validator, user *users.User) {
+func ValidateUser(v *Validator, user *domain.User) {
 	v.Check(user.Name != "", "name", "must be provided")
 	v.Check(len(user.Name) <= 500, "name", "must not be more than 500 bytes long")
 	// Call the standalone ValidateEmail() helper.
