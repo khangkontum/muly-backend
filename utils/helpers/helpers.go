@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 
 type envelope map[string]interface{}
 
-func (app *application) readIDParams(r *http.Request) (int64, error) {
+func ReadIDParams(r *http.Request) (int64, error) {
 	params := r.URL.Query()
 
 	id, err := strconv.ParseInt(params.Get("id"), 10, 64)
@@ -22,7 +22,7 @@ func (app *application) readIDParams(r *http.Request) (int64, error) {
 	return id, nil
 }
 
-func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func WriteJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
 	// add no line prefix
 	// add \t indent to every lines
 	js, err := json.MarshalIndent(data, "", "\t")
@@ -42,7 +42,7 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 	return nil
 }
 
-func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+func ReadJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	max_bytes := 1_048_576
 	// Restrict Bytes from API
 	r.Body = http.MaxBytesReader(w, r.Body, int64(max_bytes))
@@ -83,8 +83,4 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 		}
 	}
 	return nil
-}
-
-func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
-	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }
