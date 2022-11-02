@@ -13,9 +13,5 @@ func (app *application) healthCheckHandler(c *gin.Context) {
 		"environment": app.config.env,
 		"version":     version,
 	}
-	err := app.writeJSON(c.Writer, http.StatusOK, envelope{"data": data}, nil)
-	if err != nil {
-		app.logger.Println(err)
-		app.serverErrorResponse(c.Writer, c.Request, err)
-	}
+	c.JSON(http.StatusOK, map[string]interface{}{"data": data})
 }

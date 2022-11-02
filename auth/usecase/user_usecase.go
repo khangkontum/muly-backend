@@ -1,10 +1,10 @@
-package usecase
+package authUsecase
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"plato-tech/muly/domain"
+	"plato-tech/muly/utils/appError"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,38 +22,35 @@ func NewUserUsecase(ur domain.UserRepository, contextTimeout time.Duration) doma
 	}
 }
 
-func (uu *userUsecase) Insert(c *gin.Context, user *domain.User) error {
+func (uu *userUsecase) Insert(c *gin.Context, user *domain.User) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 
 	receivedUser, err := uu.userRepo.Insert(ctx, user)
 	if err != nil {
-		c.String(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
-		return nil
+		appError.AbortWithError(c, http.StatusBadRequest, err.Error())
+		return
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }
 
-func (uu *userUsecase) GetByEmail(c *gin.Context, email string) error {
+func (uu *userUsecase) GetByEmail(c *gin.Context, email string) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 	receivedUser, err := uu.userRepo.GetByEmail(ctx, email)
 	if err != nil {
-		c.String(http.StatusNotFound, fmt.Sprintf("error: %s", err))
-		return nil
+		appError.AbortWithError(c, http.StatusNotFound, err.Error())
+		return
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }
-func (uu *userUsecase) Update(c *gin.Context, user *domain.User) error {
+func (uu *userUsecase) Update(c *gin.Context, user *domain.User) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 	receivedUser, err := uu.userRepo.Update(ctx, user)
 	if err != nil {
-		c.String(http.StatusNotFound, fmt.Sprintf("error: %s", err))
-		return nil
+		appError.AbortWithError(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }

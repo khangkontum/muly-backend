@@ -1,4 +1,4 @@
-package postgres
+package authPostgres
 
 import (
 	"context"
@@ -15,8 +15,6 @@ type userRepo struct {
 func NewUserRepo(conn *sql.DB) domain.UserRepository {
 	return &userRepo{conn}
 }
-
-func (ur *userRepo) insert(user *domain.User)
 
 func (ur *userRepo) Insert(ctx context.Context, user *domain.User) (domain.User, error) {
 	query := `

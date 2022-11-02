@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"encoding/json"
@@ -7,12 +7,14 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type envelope map[string]interface{}
 
-func (app *application) readIDParams(r *http.Request) (int64, error) {
-	params := r.URL.Query()
+func ReadIDParams(c *gin.Context) (int64, error) {
+	params := c.Request.URL.Query()
 
 	id, err := strconv.ParseInt(params.Get("id"), 10, 64)
 	if err != nil || id < 1 {
@@ -22,9 +24,10 @@ func (app *application) readIDParams(r *http.Request) (int64, error) {
 	return id, nil
 }
 
-func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func WriteJSON(c *gin.Context, status int, data envelope, headers http.Header) error {
 	// add no line prefix
 	// add \t indent to every lines
+	w := c.Writer
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -42,8 +45,10 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 	return nil
 }
 
-func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+func ReadJSON(c *gin.Context, dst interface{}) error {
 	max_bytes := 1_048_576
+	r := c.Request
+	w := c.Writer
 	// Restrict Bytes from API
 	r.Body = http.MaxBytesReader(w, r.Body, int64(max_bytes))
 	dec := json.NewDecoder(r.Body)
@@ -83,8 +88,4 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 		}
 	}
 	return nil
-}
-
-func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
-	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }

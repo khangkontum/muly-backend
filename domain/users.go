@@ -31,9 +31,9 @@ type UserRepository interface {
 	Update(ctx context.Context, user *User) (User, error)
 }
 type UserUsecase interface {
-	Insert(c *gin.Context, user *User) error
-	GetByEmail(c *gin.Context, email string) error
-	Update(c *gin.Context, user *User) error
+	Insert(c *gin.Context, user *User)
+	GetByEmail(c *gin.Context, email string)
+	Update(c *gin.Context, user *User)
 }
 
 func (p *Password) Set(plaintextPassword string) error {

@@ -1,0 +1,20 @@
+{
+  "environment": "development",
+  "timeout": "3s",
+  "server": {
+    "address": 4000
+  },
+  "database": {
+    "host": "postgres",
+    "port": "5432",
+    "user": "muly",
+    "pass": "mulythegoat",
+    "name": "postgres",
+    "address": "localhost",
+    "sslmode": "disable",
+    "max_open_conns": 25,
+    "max_idle_conns": 25,
+    "max_idle_time": "15m"
+  }
+}
+
