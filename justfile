@@ -1,4 +1,4 @@
-set positional-arguments
+set positional-arguments 
 
 @mc *args='':
-   migrate create -seq -ext=.sql -dir=./migrations $1 
+    migrate create -seq -ext=.sql -dir=./migrations $1 
