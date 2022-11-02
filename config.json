@@ -1,7 +1,8 @@
 {
   "environment": "development",
   "server": {
-    "address": 4000
+    "address": 4000,
+    "cmm": ""
   },
   "database": {
     "host": "postgres",
