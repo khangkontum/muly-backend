@@ -1,5 +1,6 @@
 {
   "environment": "development",
+  "khonloi": "bucu",
   "server": {
     "address": 4000
   },
