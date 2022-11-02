@@ -18,6 +18,7 @@ const version = "1.0.0"
 type application struct {
 	config config
 	logger *log.Logger
+	Conn   *sql.DB
 }
 
 func main() {
@@ -56,6 +57,7 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		Conn:   db,
 	}
 
 	// Declare a new servrmux and add a /v1/healthcheck route which dispatches

@@ -2,16 +2,17 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+
+	_userRepo "plato-tech/muly/auth/repository/postgres/user_repo"
 )
 
 func (app *application) routes() *gin.Engine {
 	// router := httprouter.New()
 	// router := mux.NewRouter()
-	router := gin.New()
+	router := gin.Default()
 	router.GET("/v1/healthcheck", app.healthCheckHandler)
 
-	// router.NotFound = http.HandlerFunc(app.notFoundResponse)
-	// router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
+	userRepo := _userRepo.New
 
 	return router
 }

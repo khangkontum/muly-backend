@@ -22,38 +22,32 @@ func NewUserUsecase(ur domain.UserRepository, contextTimeout time.Duration) doma
 	}
 }
 
-func (uu *userUsecase) Insert(c *gin.Context, user *domain.User) error {
+func (uu *userUsecase) Insert(c *gin.Context, user *domain.User) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 
 	receivedUser, err := uu.userRepo.Insert(ctx, user)
 	if err != nil {
-		c.String(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
-		return nil
+		c.AbortWithError(http.StatusNotFound, err)
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }
 
-func (uu *userUsecase) GetByEmail(c *gin.Context, email string) error {
+func (uu *userUsecase) GetByEmail(c *gin.Context, email string) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 	receivedUser, err := uu.userRepo.GetByEmail(ctx, email)
 	if err != nil {
-		c.String(http.StatusNotFound, fmt.Sprintf("error: %s", err))
-		return nil
+		c.AbortWithError(http.StatusNotFound, err)
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }
-func (uu *userUsecase) Update(c *gin.Context, user *domain.User) error {
+func (uu *userUsecase) Update(c *gin.Context, user *domain.User) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()
 	receivedUser, err := uu.userRepo.Update(ctx, user)
 	if err != nil {
-		c.String(http.StatusNotFound, fmt.Sprintf("error: %s", err))
-		return nil
+		c.String(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
 	}
 	c.JSON(http.StatusOK, receivedUser)
-	return nil
 }
