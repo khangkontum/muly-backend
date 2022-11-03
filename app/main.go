@@ -56,24 +56,26 @@ func main() {
 	logger.Printf("database connection pool established")
 
 	// Create AWS bucket session
-	sess, err := session.NewSessionWithOptions(session.Options{
-		Profile: "default",
-		Config: aws.Config{
-			Region: aws.String(cfg.aws.region),
-		},
-	})
+	if cfg.aws.accessKey != "" && cfg.aws.secretAccressKey != "" {
+		sess, err := session.NewSessionWithOptions(session.Options{
+			Profile: "default",
+			Config: aws.Config{
+				Region: aws.String(cfg.aws.region),
+			},
+		})
 
-	if err != nil {
-		fmt.Printf("Failed to initialize new session: %v", err)
-		return
-	}
+		if err != nil {
+			fmt.Printf("Failed to initialize new session: %v", err)
+			return
+		}
 
-	s3Client := s3.New(sess)
+		s3Client := s3.New(sess)
 
-	err = creadBucket(s3Client, cfg.aws.publicBucketName)
-	if err != nil {
-		fmt.Printf("Couldn't create bucket: %v", err)
-		return
+		err = creadBucket(s3Client, cfg.aws.publicBucketName)
+		if err != nil {
+			fmt.Printf("Couldn't create bucket: %v", err)
+			return
+		}
 	}
 
 	// Declare an instance of the application struct, containing the config
