@@ -16,7 +16,12 @@ func (app *application) routes() *gin.Engine {
 
 	userRepo := authPostgres.NewUserRepo(app.conn)
 	userUseCase := authUsecase.NewUserUsecase(userRepo, app.config.timeout)
-	authHandler.NewUserHandler(router, userUseCase)
+	userHandler := authHandler.NewUserHandler(userUseCase)
+
+	v1 := router.Group("/v1")
+	{
+		v1.POST("/register", userHandler.RegisterUserHandler)
+	}
 
 	return router
 }

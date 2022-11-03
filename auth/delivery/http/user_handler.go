@@ -12,14 +12,11 @@ type UserHandler struct {
 	userUsecase domain.UserUsecase
 }
 
-func NewUserHandler(e *gin.Engine, uu domain.UserUsecase) {
-	handler := &UserHandler{
-		userUsecase: uu,
-	}
-	e.POST("/v1/register", handler.registerUserHandler)
+func NewUserHandler(uu domain.UserUsecase) *UserHandler {
+	return &UserHandler{uu}
 }
 
-func (h *UserHandler) registerUserHandler(c *gin.Context) {
+func (h *UserHandler) RegisterUserHandler(c *gin.Context) {
 	// Read the input Data from API
 	var input struct {
 		Name     string `json:"name"`
