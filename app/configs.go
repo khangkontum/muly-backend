@@ -19,9 +19,9 @@ type config struct {
 		maxIdleTime  time.Duration
 	}
 	aws struct {
-		region string
+		region           string
 		publicBucketName string
-		accessKey string
+		accessKey        string
 		secretAccressKey string
 	}
 }

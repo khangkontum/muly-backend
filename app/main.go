@@ -11,6 +11,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 )
@@ -54,7 +55,7 @@ func main() {
 	// Log a msg to say that the conn has been successfully established.
 	logger.Printf("database connection pool established")
 
-	// Create session AWS
+	// Create AWS bucket session
 	sess, err := session.NewSessionWithOptions(session.Options{
 		Profile: "default",
 		Config: aws.Config{
@@ -63,7 +64,15 @@ func main() {
 	})
 
 	if err != nil {
-		fmt.Printf("Failed to initialize new aws session: %v", err)
+		fmt.Printf("Failed to initialize new session: %v", err)
+		return
+	}
+
+	s3Client := s3.New(sess)
+
+	err = creadBucket(s3Client, cfg.aws.publicBucketName)
+	if err != nil {
+		fmt.Printf("Couldn't create bucket: %v", err)
 		return
 	}
 
@@ -90,6 +99,14 @@ func main() {
 	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
 	err = srv.ListenAndServe()
 	logger.Fatal(err)
+}
+
+func creadBucket(client *s3.S3, bucketName string) error {
+	_, err := client.CreateBucket(&s3.CreateBucketInput{
+		Bucket: aws.String(bucketName),
+	})
+
+	return err
 }
 
 func openDB(cfg config) (*sql.DB, error) {
