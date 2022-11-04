@@ -52,5 +52,10 @@ func importConfig(cfg *config) error {
 		log.Fatal("MAX_IDLE_TIME wrong format")
 		return err
 	}
+
+	cfg.aws.region = viper.GetString("aws.region")
+	cfg.aws.publicBucketName = viper.GetString("aws.publicBucketName")
+	cfg.aws.accessKey = viper.GetString("aws.accessKey")
+	cfg.aws.secretAccressKey = viper.GetString("aws.secretAccressKey")
 	return nil
 }

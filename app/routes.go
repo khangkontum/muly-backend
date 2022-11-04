@@ -9,8 +9,6 @@ import (
 )
 
 func (app *application) routes() *gin.Engine {
-	// router := httprouter.New()
-	// router := mux.NewRouter()
 	router := gin.Default()
 	router.GET("/v1/healthcheck", app.healthCheckHandler)
 
